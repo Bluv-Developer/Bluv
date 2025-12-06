@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - Bluv</title>
+    <!-- Load Tailwind CSS from CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Import custom fonts for the selection effect */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+        /* Custom styles for a minimal, clean, and professional look */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Light tan/off-white background for natural feel */
+            background-color: #f7f3f1; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none; /* Disable native text selection globally */
+        }
+
+        /* Custom Keyframe for subtle slide-up animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Apply the slide-up animation to the main content */
+        .slide-in-animation {
+            animation: slideUp 0.8s ease-out backwards;
+        }
+
+        /* Custom GLOW effect for the launch button */
+        .glow-hover {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); 
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 40px rgba(255, 193, 7, 0.7); /* Custom amber glow shadow */
+        }
+
+        /* --- Custom Flashing Hint Animation --- */
+        @keyframes flashGlow {
+            0%, 100% { 
+                opacity: 1; 
+                text-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* Subtle dark text shadow for the glow */
+            }
+            50% { 
+                opacity: 0.8; 
+                text-shadow: 0 0 8px rgba(0, 0, 0, 0.4); /* Brighter pulse */
+            }
+        }
+
+        .flashing-hint {
+            animation: flashGlow 1.5s infinite alternate;
+        }
+
+        /* --- CUSTOM SELECTION STYLES & ANIMATION --- */
+        @keyframes rainbowPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .selected-word {
+            display: inline-block;
+            font-family: 'Bungee', cursive !important;
+            font-weight: 700 !important;
+            background: linear-gradient(120deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400% 400%;
+            color: #1c1917 !important;
+            padding: 2px 4px;
+            margin: -2px 0;
+            border-radius: 6px;
+            line-height: 1.2;
+            transition: all 0.1s ease-out;
+            animation: rainbowPulse 5s ease infinite;
+        }
+        
+        .selectable-word {
+            transition: all 0.1s ease-out;
+            cursor: default;
+        }
+
+        #headline, #subtitle {
+            display: block;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Main Content Area: Increased padding and separation for cleanliness -->
+    <div class="flex-grow flex items-center justify-center p-8 sm:p-16">
+        <div class="text-center max-w-4xl w-full space-y-12">
+            
+            <!-- Logo/Brand Identity - Bigger, Interactive, with subtle rotate on hover -->
+            <div class="mb-12 transition duration-300 hover:animate-pulse hover:rotate-1">
+                <img 
+                    src="https://ik.imagekit.io/tycncf0zq0/Bluv.jpg" 
+                    alt="Bluv Logo" 
+                    class="max-h-28 mx-auto rounded-xl shadow-lg transition duration-300"
+                    title="Bluv Logo"
+                    onerror="this.onerror=null; this.src='https://placehold.co/150x80/f7f3f1/stone?text=BLUV+Logo'"
+                >
+            </div>
+            
+            <!-- New Hint Message: Flashing, black, and very small -->
+            <div id="hint-message" class="flashing-hint text-xs text-stone-900 lowercase tracking-wider -mt-6 mb-4 slide-in-animation" style="animation-delay: 0.1s;">
+                try clicking a word!
+            </div>
+
+            <!-- Primary Headline and Subtitle Containers (Will be populated by JS) -->
+            <header class="space-y-6">
+                <!-- Headline Animation Delay adjusted to 0.3s -->
+                <h1 id="headline" class="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-900 leading-none slide-in-animation" style="animation-delay: 0.3s;">
+                    <!-- Original Text: Building Something Extraordinary. -->
+                </h1>
+
+                <!-- Subtitle/Description Animation Delay adjusted to 0.5s -->
+                <p id="subtitle" class="text-xl sm:text-2xl text-stone-600 font-light max-w-2xl mx-auto pt-4 slide-in-animation" style="animation-delay: 0.5s;">
+                    <!-- Original Text: Our modern platform is launching soon. -->
+                </p>
+            </header>
+
+            <!-- Launch Date Callout - Refined Button Animation Delay 0.7s -->
+            <div class="pt-8 slide-in-animation" style="animation-delay: 0.7s;">
+                <div class="inline-block bg-stone-900 text-white text-base font-bold px-10 py-3 rounded-full shadow-xl glow-hover transition duration-300 cursor-default tracking-widest uppercase">
+                    Launch Window: 2025 – 2026
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer: Clean separation for organization, with delayed slide-in animation (0.9s) -->
+    <footer class="p-6 text-center text-stone-600 text-sm border-t border-stone-200 slide-in-animation" style="animation-delay: 0.9s;">
+        &copy; 2025 Future Site. All Rights Reserved. Powered by 
+        <span class="font-extrabold text-amber-700">Bluv</span>
+    </footer>
+    
+    <script>
+        // --- TEXT CONTENT ---
+        const HEADLINE_TEXT = "Building Something Extraordinary.";
+        const SUBTITLE_TEXT = "This website is coming soon.";
+
+        // --- DOM ELEMENTS ---
+        const headlineEl = document.getElementById('headline');
+        const subtitleEl = document.getElementById('subtitle');
+        const hintMessageEl = document.getElementById('hint-message'); // Access the new hint element
+        const selectableContainers = [headlineEl, subtitleEl];
+
+        // --- SELECTION STATE ---
+        let isSelecting = false;
+        let selectedSpans = new Set();
+        let allWords = [];
+        let hintDismissed = false; // Flag to track if the hint has been removed
+
+        // Function to wrap text content into selectable spans
+        function wrapWords(element, text) {
+            element.textContent = '';
+            // Split by any sequence of whitespace
+            const words = text.split(/\s+/); 
+            words.forEach(word => {
+                // Only process non-empty words
+                if (word.length > 0) {
+                    // Create a container span for the word
+                    const wordSpan = document.createElement('span');
+                    wordSpan.textContent = word;
+                    wordSpan.classList.add('selectable-word', 'transition-all');
+                    
+                    wordSpan.dataset.text = word; 
+                    allWords.push(wordSpan);
+                    element.appendChild(wordSpan);
+                    
+                    // CRITICAL: Append a normal space after the word span to ensure standard browser word wrapping and spacing
+                    element.appendChild(document.createTextNode(' ')); 
+                }
+            });
+        }
+
+        // --- CORE LOGIC ---
+
+        function handleMouseDown(e) {
+            // Check if the click is within the headline or subtitle area
+            if (selectableContainers.some(el => el.contains(e.target))) {
+                 // Dismiss the hint on the first successful interaction with a selectable word
+                if (!hintDismissed && e.target.classList.contains('selectable-word')) {
+                    hintMessageEl.classList.remove('flashing-hint');
+                    // Make the hint disappear gently
+                    hintMessageEl.style.transition = 'opacity 0.5s ease-out, margin 0.5s ease-out';
+                    hintMessageEl.style.opacity = '0'; 
+                    // Optional: remove margin space to collapse the area
+                    hintMessageEl.style.marginBottom = '0'; 
+                    setTimeout(() => {
+                        hintMessageEl.remove();
+                    }, 500);
+                    hintDismissed = true;
+                }
+
+                isSelecting = true;
+                // Clear existing selection and styles
+                clearSelection();
+                // Set the current word as the start of selection
+                if (e.target.classList.contains('selectable-word')) {
+                    e.target.classList.add('selected-word');
+                    selectedSpans.add(e.target);
+                }
+            } else {
+                isSelecting = false;
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (!isSelecting) return;
+
+            const target = e.target;
+            if (target.classList.contains('selectable-word')) {
+                // If the target is a word, update the selection range
+                updateSelection(target);
+            }
+        }
+
+        function handleMouseUp() {
+            isSelecting = false;
+        }
+        
+        function updateSelection(currentWordSpan) {
+            // Find the index of the word clicked/hovered
+            const currentIndex = allWords.indexOf(currentWordSpan);
+            if (currentIndex === -1) return;
+
+            // Find the boundaries of the existing selection
+            let start = -1;
+            let end = -1;
+
+            // Find the first and last selected words
+            for (let i = 0; i < allWords.length; i++) {
+                if (selectedSpans.has(allWords[i])) {
+                    if (start === -1) start = i;
+                    end = i;
+                }
+            }
+            
+            // Determine if we are extending left or right
+            let newStart = start;
+            let newEnd = end;
+
+            if (start === -1) {
+                // No current selection, select only the current word
+                newStart = currentIndex;
+                newEnd = currentIndex;
+            } else if (currentIndex < start) {
+                // Extending selection to the left
+                newStart = currentIndex;
+            } else if (currentIndex > end) {
+                // Extending selection to the right
+                newEnd = currentIndex;
+            } else if (currentIndex >= start && currentIndex <= end) {
+                // If clicked inside current selection, we need to find the closest boundary to "snap" to
+                const distanceToStart = currentIndex - start;
+                const distanceToEnd = end - currentIndex;
+
+                if (distanceToStart < distanceToEnd) {
+                    // Closer to start, new end becomes the current index
+                    newEnd = currentIndex;
+                } else {
+                    // Closer to end, new start becomes the current index
+                    newStart = currentIndex;
+                }
+            }
+            
+            // Re-apply selection based on new boundaries
+            clearSelection();
+            for (let i = newStart; i <= newEnd; i++) {
+                if (i >= 0 && i < allWords.length) {
+                    allWords[i].classList.add('selected-word');
+                    selectedSpans.add(allWords[i]);
+                }
+            }
+        }
+
+        function clearSelection() {
+            selectedSpans.forEach(span => span.classList.remove('selected-word'));
+            selectedSpans.clear();
+        }
+
+        // --- DISABLE DEFAULT ACTIONS (Copy/Paste/Save) ---
+
+        function disableDefaultActions(e) {
+            // Prevents context menu (right click), image saving, and copy
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Browser default action blocked.");
+        }
+        
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            // 1. Wrap the text in spans for individual styling
+            wrapWords(headlineEl, HEADLINE_TEXT);
+            wrapWords(subtitleEl, SUBTITLE_TEXT);
+
+            // 2. Attach custom selection event listeners
+            document.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            
+            // 3. Disable default browser actions
+            document.addEventListener('contextmenu', disableDefaultActions);
+            document.addEventListener('copy', disableDefaultActions);
+            document.addEventListener('selectstart', disableDefaultActions); 
+            
+            // Prevent dragging/saving of the logo image
+            const logoImage = document.querySelector('img');
+            logoImage.addEventListener('mousedown', (e) => {
+                if (e.button === 0) e.preventDefault(); // Prevents image drag
+            });
+            logoImage.addEventListener('contextmenu', disableDefaultActions);
+            logoImage.addEventListener('copy', disableDefaultActions);
+            
+            console.log("Custom selection and protection initialized.");
+        };
+
+    </script>
+</body>
+</html>
