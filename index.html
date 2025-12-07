@@ -3,335 +3,605 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon - Bluv</title>
-    <!-- Load Tailwind CSS from CDN for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bluv Development - Tis the Season</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Import custom fonts for the selection effect */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+        :root {
+            /* --- Original Theme (Casual) --- */
+            --bg-color: #EFEBE0;
+            --text-main: #231F20;
+            --text-accent: #8D6E63;
+            --card-bg: rgba(255, 255, 255, 0.4);
+            --card-border: rgba(141, 110, 99, 0.1);
+            --pill-bg: #231F20;
+            --pill-text: #EFEBE0;
+            --font-main: 'Montserrat', sans-serif;
+        }
 
-        /* Custom styles for a minimal, clean, and professional look */
+        /* --- Clean Holiday Theme --- */
+        body.christmas-mode {
+            /* Smooth Red to Green Gradient */
+            --bg-color: #0F3D24; /* Fallback */
+            --bg-gradient: linear-gradient(135deg, #0f3d24 0%, #3d0f0f 100%);
+            
+            --text-main: #FFFFFF;
+            --text-accent: #e0e0e0;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --pill-bg: #FFFFFF;
+            --pill-text: #8b0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            /* Light tan/off-white background for natural feel */
-            background-color: #f7f3f1; 
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto; 
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            transition: background-color 1.5s ease;
+        }
+        
+        /* Gradient Background Layer for smoother transition */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient, none);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        
+        body.christmas-mode::before {
+            opacity: 1;
+        }
+
+        /* --- Shake Animation --- */
+        .shake-effect {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* --- Ambient Background Shapes --- */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            filter: blur(60px);
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        
+        /* Hide shapes in christmas mode for cleaner look */
+        body.christmas-mode .background-shapes {
+            opacity: 0; 
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #D7CCC8;
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        .shape:nth-child(1) { width: 500px; height: 500px; top: -100px; left: -100px; }
+        .shape:nth-child(2) { width: 400px; height: 400px; bottom: -50px; right: -50px; animation-delay: -5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -50px); }
+        }
+
+        /* --- Simple Tab Banner --- */
+        #promo-tab {
+            position: fixed;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #8b0000;
+            padding: 0.8rem 2rem;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.9rem;
+        }
+
+        #promo-tab.visible { top: 0; }
+        
+        .tab-icon {
+            width: 20px;
+            height: 20px;
+            fill: #8b0000; /* Dark Red */
+        }
+
+        /* --- Snow --- */
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+        
+        .snowflake {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6; /* Slightly more transparent */
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        @keyframes fall { to { transform: translateY(100vh); } }
+
+        /* --- Main Content --- */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 6rem 2rem 4rem 2rem;
+            max-width: 1000px;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 2rem;
+            /* Plain, no glow */
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+            transition: opacity 0.5s ease;
+        }
+
+        .brand-name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            min-height: 1.2em; /* Keep layout stable during typing */
+            /* No text shadow/glow */
+            transform-origin: center;
+        }
+        
+        /* Cursor for Typewriter effect */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: var(--text-main);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            opacity: 0; /* Hidden by default */
+        }
+        .cursor.typing { opacity: 1; }
+        
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .subtitle {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-            user-select: none; /* Disable native text selection globally */
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--text-accent);
+            font-weight: 400;
+            margin-bottom: 2rem;
         }
 
-        /* Custom Keyframe for subtle slide-up animation */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Apply the slide-up animation to the main content */
-        .slide-in-animation {
-            animation: slideUp 0.8s ease-out backwards;
+        .discord-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        /* Custom GLOW effect for the launch button */
-        .glow-hover {
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); 
-        }
-        .glow-hover:hover {
-            box-shadow: 0 0 40px rgba(255, 193, 7, 0.7); /* Custom amber glow shadow */
-        }
-
-        /* --- Custom Flashing Hint Animation --- */
-        @keyframes flashGlow {
-            0%, 100% { 
-                opacity: 1; 
-                text-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* Subtle dark text shadow for the glow */
-            }
-            50% { 
-                opacity: 0.8; 
-                text-shadow: 0 0 8px rgba(0, 0, 0, 0.4); /* Brighter pulse */
-            }
-        }
-
-        .flashing-hint {
-            animation: flashGlow 1.5s infinite alternate;
-        }
-
-        /* --- CUSTOM SELECTION STYLES & ANIMATION --- */
-        @keyframes rainbowPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .selected-word {
+        .status-pill {
             display: inline-block;
-            font-family: 'Bungee', cursive !important;
-            font-weight: 700 !important;
-            background: linear-gradient(120deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            background-size: 400% 400%;
-            color: #1c1917 !important;
-            padding: 2px 4px;
-            margin: -2px 0;
-            border-radius: 6px;
-            line-height: 1.2;
-            transition: all 0.1s ease-out;
-            animation: rainbowPulse 5s ease infinite;
+            background-color: var(--pill-bg);
+            color: var(--pill-text);
+            padding: 0.6rem 2rem;
+            border-radius: 4px; /* Slightly sharper for modern look */
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.5s ease;
+        }
+
+        /* --- Split Focus Section --- */
+        .focus-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            margin-top: 4rem; 
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        /* Simple Lines instead of fancy arrows */
+        .branch-lines {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .line-path {
+            fill: none;
+            stroke: var(--text-accent);
+            stroke-width: 1;
+            opacity: 0.4;
+        }
+
+        .focus-cards-wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin-top: 40px;
+            gap: 2rem;
+        }
+
+        .focus-card {
+            flex: 1;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .focus-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.8);
         }
         
-        .selectable-word {
-            transition: all 0.1s ease-out;
-            cursor: default;
+        body.christmas-mode .focus-card:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        #headline, #subtitle {
-            display: block;
-            text-align: center;
+        .card-icon {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+        
+        /* Force icons to be white in christmas mode */
+        body.christmas-mode .card-icon svg {
+            stroke: white;
         }
 
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.8rem;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: var(--text-accent);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .tech-tag {
+            background-color: transparent;
+            color: var(--text-accent);
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background-color: var(--text-main);
+            color: var(--bg-color);
+            border-color: var(--text-main);
+        }
+
+        /* Community Roles */
+        .roles-container {
+            border-top: 1px solid var(--card-border);
+            padding-top: 2rem;
+            width: 100%;
+        }
+
+        .roles-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+
+        .role-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-accent);
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .brand-name { font-size: 2rem; }
+            .focus-cards-wrapper { flex-direction: column; margin-top: 1rem; }
+            .branch-lines { display: none; }
+            .focus-card { margin-bottom: 1rem; }
+            #promo-tab { width: 90%; font-size: 0.8rem; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Main Content Area: Increased padding and separation for cleanliness -->
-    <div class="flex-grow flex items-center justify-center p-8 sm:p-16">
-        <div class="text-center max-w-4xl w-full space-y-12">
-            
-            <!-- Logo/Brand Identity - Bigger, Interactive, with subtle rotate on hover -->
-            <div class="mb-12 transition duration-300 hover:animate-pulse hover:rotate-1">
-                <img 
-                    src="https://ik.imagekit.io/tycncf0zq0/Bluv.jpg" 
-                    alt="Bluv Logo" 
-                    class="max-h-28 mx-auto rounded-xl shadow-lg transition duration-300"
-                    title="Bluv Logo"
-                    onerror="this.onerror=null; this.src='https://placehold.co/150x80/f7f3f1/stone?text=BLUV+Logo'"
-                >
+    <!-- Simple Top Tab -->
+    <div id="promo-tab">
+        <!-- Plain Icon -->
+        <svg class="tab-icon" viewBox="0 0 24 24">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
+        <span>Tis the Season: Free Services until 2026</span>
+    </div>
+
+    <!-- Snow Container -->
+    <div id="snow-container"></div>
+
+    <!-- Ambient Background (Only for Casual Mode) -->
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <img src="https://ik.imagekit.io/tycncf0zq0/Bluv%20%20(1).png?updatedAt=1765140175002" alt="Bluv Logo" class="logo">
+        
+        <!-- Brand Name with Typewriter Cursor -->
+        <h1 class="brand-name">
+            <span id="title-text">Bluv Development</span><span class="cursor"></span>
+        </h1>
+        
+        <div class="subtitle">
+            <span>Founded by Bluv</span>
+            <div class="discord-row">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419z"/>
+                </svg>
+                <span>bluv</span>
             </div>
-            
-            <!-- New Hint Message: Flashing, black, and very small -->
-            <div id="hint-message" class="flashing-hint text-xs text-stone-900 lowercase tracking-wider -mt-6 mb-4 slide-in-animation" style="animation-delay: 0.1s;">
-                try clicking a word!
-            </div>
+        </div>
+        
+        <div class="status-container">
+            <span class="status-pill">Website Coming Soon</span>
+        </div>
 
-            <!-- Primary Headline and Subtitle Containers (Will be populated by JS) -->
-            <header class="space-y-6">
-                <!-- Headline Animation Delay adjusted to 0.3s -->
-                <h1 id="headline" class="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-900 leading-none slide-in-animation" style="animation-delay: 0.3s;">
-                    <!-- Original Text: Building Something Extraordinary. -->
-                </h1>
+        <!-- Split Focus Section -->
+        <div class="focus-container">
+            <svg class="branch-lines" viewBox="0 0 400 60" preserveAspectRatio="none">
+                <path d="M 200 0 L 200 20 L 80 20 L 80 60" class="line-path" />
+                <path d="M 200 0 L 200 20 L 320 20 L 320 60" class="line-path" />
+            </svg>
 
-                <!-- Subtitle/Description Animation Delay adjusted to 0.5s -->
-                <p id="subtitle" class="text-xl sm:text-2xl text-stone-600 font-light max-w-2xl mx-auto pt-4 slide-in-animation" style="animation-delay: 0.5s;">
-                    <!-- Original Text: Our modern platform is launching soon. -->
-                </p>
-            </header>
+            <div class="focus-cards-wrapper">
+                <!-- Website Development -->
+                <div class="focus-card">
+                    <div class="card-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    </div>
+                    <div class="card-title">Website Development</div>
+                    <p class="card-desc">
+                        Versatile solutions using Python, HTML/CSS, JS, PHP, and more.
+                    </p>
+                </div>
 
-            <!-- Launch Date Callout - Refined Button Animation Delay 0.7s -->
-            <div class="pt-8 slide-in-animation" style="animation-delay: 0.7s;">
-                <div class="inline-block bg-stone-900 text-white text-base font-bold px-10 py-3 rounded-full shadow-xl glow-hover transition duration-300 cursor-default tracking-widest uppercase">
-                    Launch Window: 2025 – 2026
+                <!-- Bot Development -->
+                <div class="focus-card">
+                    <div class="card-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+                    </div>
+                    <div class="card-title">Bot Development</div>
+                    <p class="card-desc">
+                        Top-quality Discord bots and automated community systems.
+                    </p>
                 </div>
             </div>
+        </div>
 
+        <div class="tech-stack">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">HTML/CSS</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">Java</span>
+            <span class="tech-tag">C#</span>
+            <span class="tech-tag">C++</span>
+            <span class="tech-tag">PHP</span>
+            <span class="tech-tag">Ruby</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">SQL</span>
+            <span class="tech-tag">JSON</span>
+        </div>
+
+        <!-- Community Roles -->
+        <div class="roles-container">
+            <div class="roles-title">Team Structure</div>
+            <div class="role-list">
+                <span class="role-item">Assistant</span>
+                <span class="role-item">Investigators</span>
+                <span class="role-item">Admins</span>
+                <span class="role-item">Moderators</span>
+                <span class="role-item">Helpers</span>
+                <span class="role-item">Trial Staff</span>
+            </div>
         </div>
     </div>
 
-    <!-- Footer: Clean separation for organization, with delayed slide-in animation (0.9s) -->
-    <footer class="p-6 text-center text-stone-600 text-sm border-t border-stone-200 slide-in-animation" style="animation-delay: 0.9s;">
-        &copy; 2025 Future Site. All Rights Reserved. Powered by 
-        <span class="font-extrabold text-amber-700">Bluv</span>
-    </footer>
-    
     <script>
-        // --- TEXT CONTENT ---
-        const HEADLINE_TEXT = "Building Something Extraordinary.";
-        const SUBTITLE_TEXT = "This website is coming soon.";
+        const titleElement = document.getElementById('title-text');
+        const cursor = document.querySelector('.cursor');
+        const titleContainer = document.querySelector('.brand-name');
 
-        // --- DOM ELEMENTS ---
-        const headlineEl = document.getElementById('headline');
-        const subtitleEl = document.getElementById('subtitle');
-        const hintMessageEl = document.getElementById('hint-message'); // Access the new hint element
-        const selectableContainers = [headlineEl, subtitleEl];
+        const originalText = "Bluv Development";
+        const newText = "Tis the Season";
 
-        // --- SELECTION STATE ---
-        let isSelecting = false;
-        let selectedSpans = new Set();
-        let allWords = [];
-        let hintDismissed = false; // Flag to track if the hint has been removed
-
-        // Function to wrap text content into selectable spans
-        function wrapWords(element, text) {
-            element.textContent = '';
-            // Split by any sequence of whitespace
-            const words = text.split(/\s+/); 
-            words.forEach(word => {
-                // Only process non-empty words
-                if (word.length > 0) {
-                    // Create a container span for the word
-                    const wordSpan = document.createElement('span');
-                    wordSpan.textContent = word;
-                    wordSpan.classList.add('selectable-word', 'transition-all');
-                    
-                    wordSpan.dataset.text = word; 
-                    allWords.push(wordSpan);
-                    element.appendChild(wordSpan);
-                    
-                    // CRITICAL: Append a normal space after the word span to ensure standard browser word wrapping and spacing
-                    element.appendChild(document.createTextNode(' ')); 
+        // Typewriter function
+        function typeWriter(text, element, speed = 100, isDeleting = false) {
+            return new Promise((resolve) => {
+                let i = isDeleting ? element.textContent.length : 0;
+                
+                function step() {
+                    if (isDeleting) {
+                        element.textContent = text.substring(0, i);
+                        i--;
+                        if (i >= 0) {
+                            setTimeout(step, speed / 2); // Deleting is faster
+                        } else {
+                            resolve();
+                        }
+                    } else {
+                        element.textContent = text.substring(0, i + 1);
+                        i++;
+                        if (i <= text.length) {
+                            setTimeout(step, speed);
+                        } else {
+                            resolve();
+                        }
+                    }
                 }
+                step();
             });
         }
 
-        // --- CORE LOGIC ---
+        // Animation Sequence
+        window.addEventListener('load', () => {
+            setTimeout(async () => {
+                
+                // 1. Shake
+                titleContainer.classList.add('shake-effect');
+                await new Promise(r => setTimeout(r, 500)); // Wait for shake
+                titleContainer.classList.remove('shake-effect');
 
-        function handleMouseDown(e) {
-            // Check if the click is within the headline or subtitle area
-            if (selectableContainers.some(el => el.contains(e.target))) {
-                 // Dismiss the hint on the first successful interaction with a selectable word
-                if (!hintDismissed && e.target.classList.contains('selectable-word')) {
-                    hintMessageEl.classList.remove('flashing-hint');
-                    // Make the hint disappear gently
-                    hintMessageEl.style.transition = 'opacity 0.5s ease-out, margin 0.5s ease-out';
-                    hintMessageEl.style.opacity = '0'; 
-                    // Optional: remove margin space to collapse the area
-                    hintMessageEl.style.marginBottom = '0'; 
-                    setTimeout(() => {
-                        hintMessageEl.remove();
-                    }, 500);
-                    hintDismissed = true;
-                }
+                // 2. Zoom In
+                titleContainer.style.transition = "transform 0.8s ease";
+                titleContainer.style.transform = "scale(1.3)";
+                cursor.classList.add('typing'); // Show cursor
 
-                isSelecting = true;
-                // Clear existing selection and styles
-                clearSelection();
-                // Set the current word as the start of selection
-                if (e.target.classList.contains('selectable-word')) {
-                    e.target.classList.add('selected-word');
-                    selectedSpans.add(e.target);
-                }
-            } else {
-                isSelecting = false;
+                await new Promise(r => setTimeout(r, 800)); // Wait for zoom
+
+                // 3. Delete "Bluv Development"
+                await typeWriter(originalText, titleElement, 50, true);
+                
+                // 4. Type "Tis the Season"
+                await typeWriter(newText, titleElement, 100, false);
+                
+                // 5. Pause to admire
+                await new Promise(r => setTimeout(r, 2000));
+
+                // 6. Delete "Tis the Season"
+                await typeWriter(newText, titleElement, 50, true);
+
+                // 7. Type "Bluv Development"
+                await typeWriter(originalText, titleElement, 100, false);
+
+                // 8. Zoom Out & Hide Cursor
+                titleContainer.style.transform = "scale(1)";
+                cursor.classList.remove('typing');
+                
+                await new Promise(r => setTimeout(r, 500));
+
+                // 9. Trigger Christmas Theme
+                document.body.classList.add('christmas-mode');
+                document.getElementById('snow-container').style.display = 'block';
+                createSnowflakes();
+                
+                setTimeout(() => {
+                    document.getElementById('promo-tab').classList.add('visible');
+                }, 500);
+
+            }, 2000); // 2s Initial Delay
+        });
+
+        // Snow Logic
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflakeCount = 60; 
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const flake = document.createElement('div');
+                flake.classList.add('snowflake');
+                const size = Math.random() * 4 + 2 + 'px';
+                const left = Math.random() * 100 + 'vw';
+                const duration = Math.random() * 5 + 3 + 's'; 
+                const delay = Math.random() * 5 + 's';
+
+                flake.style.width = size;
+                flake.style.height = size;
+                flake.style.left = left;
+                flake.style.animationDuration = duration;
+                flake.style.animationDelay = delay;
+                flake.style.top = '-10px';
+                snowContainer.appendChild(flake);
             }
         }
-
-        function handleMouseMove(e) {
-            if (!isSelecting) return;
-
-            const target = e.target;
-            if (target.classList.contains('selectable-word')) {
-                // If the target is a word, update the selection range
-                updateSelection(target);
-            }
-        }
-
-        function handleMouseUp() {
-            isSelecting = false;
-        }
-        
-        function updateSelection(currentWordSpan) {
-            // Find the index of the word clicked/hovered
-            const currentIndex = allWords.indexOf(currentWordSpan);
-            if (currentIndex === -1) return;
-
-            // Find the boundaries of the existing selection
-            let start = -1;
-            let end = -1;
-
-            // Find the first and last selected words
-            for (let i = 0; i < allWords.length; i++) {
-                if (selectedSpans.has(allWords[i])) {
-                    if (start === -1) start = i;
-                    end = i;
-                }
-            }
-            
-            // Determine if we are extending left or right
-            let newStart = start;
-            let newEnd = end;
-
-            if (start === -1) {
-                // No current selection, select only the current word
-                newStart = currentIndex;
-                newEnd = currentIndex;
-            } else if (currentIndex < start) {
-                // Extending selection to the left
-                newStart = currentIndex;
-            } else if (currentIndex > end) {
-                // Extending selection to the right
-                newEnd = currentIndex;
-            } else if (currentIndex >= start && currentIndex <= end) {
-                // If clicked inside current selection, we need to find the closest boundary to "snap" to
-                const distanceToStart = currentIndex - start;
-                const distanceToEnd = end - currentIndex;
-
-                if (distanceToStart < distanceToEnd) {
-                    // Closer to start, new end becomes the current index
-                    newEnd = currentIndex;
-                } else {
-                    // Closer to end, new start becomes the current index
-                    newStart = currentIndex;
-                }
-            }
-            
-            // Re-apply selection based on new boundaries
-            clearSelection();
-            for (let i = newStart; i <= newEnd; i++) {
-                if (i >= 0 && i < allWords.length) {
-                    allWords[i].classList.add('selected-word');
-                    selectedSpans.add(allWords[i]);
-                }
-            }
-        }
-
-        function clearSelection() {
-            selectedSpans.forEach(span => span.classList.remove('selected-word'));
-            selectedSpans.clear();
-        }
-
-        // --- DISABLE DEFAULT ACTIONS (Copy/Paste/Save) ---
-
-        function disableDefaultActions(e) {
-            // Prevents context menu (right click), image saving, and copy
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Browser default action blocked.");
-        }
-        
-        // --- INITIALIZATION ---
-        window.onload = function() {
-            // 1. Wrap the text in spans for individual styling
-            wrapWords(headlineEl, HEADLINE_TEXT);
-            wrapWords(subtitleEl, SUBTITLE_TEXT);
-
-            // 2. Attach custom selection event listeners
-            document.addEventListener('mousedown', handleMouseDown);
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-            
-            // 3. Disable default browser actions
-            document.addEventListener('contextmenu', disableDefaultActions);
-            document.addEventListener('copy', disableDefaultActions);
-            document.addEventListener('selectstart', disableDefaultActions); 
-            
-            // Prevent dragging/saving of the logo image
-            const logoImage = document.querySelector('img');
-            logoImage.addEventListener('mousedown', (e) => {
-                if (e.button === 0) e.preventDefault(); // Prevents image drag
-            });
-            logoImage.addEventListener('contextmenu', disableDefaultActions);
-            logoImage.addEventListener('copy', disableDefaultActions);
-            
-            console.log("Custom selection and protection initialized.");
-        };
-
     </script>
 </body>
 </html>
